@@ -1,13 +1,37 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import { connectDatabase } from './config/database';
+import { sequelize } from './config/database';
+import Company from './entities/company';
+import Client from './entities/client';
+
+dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 3000;
 
+const startServer = async () => {
+    try {
+        await connectDatabase();
+        console.log('Database connected and models synchronized.');
 
-export default app;
+        // Synchronize models
+        sequelize
+            .authenticate()
+            .then(() => {
+                console.log('Connection success');
+                return sequelize.sync();
+            })
+            .catch((error) => {
+                console.error('Connection fail', error);
+            });
 
-if (require.main === module) {
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-}
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    } catch (error) {
+        console.error('Failed to start the server:', error);
+    }
+};
+
+startServer();
