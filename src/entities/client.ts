@@ -1,58 +1,34 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/database';
 
-interface ClientAttributes {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  companyId: number; // Foreign key to Company
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-interface ClientCreationAttributes extends Optional<ClientAttributes, 'id'> {}
-
-class Client extends Model<ClientAttributes, ClientCreationAttributes> implements ClientAttributes {
-  public id!: number;
-  public name!: string;
-  public email!: string;
-  public phone!: string;
-  public companyId!: number;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Client.init(
-  {
+export const Client = sequelize.define('Client', {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
+        type: DataTypes.INTEGER.UNSIGNED,
+        autoIncrement: true,
+        primaryKey: true,
     },
     name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false
     },
     email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+        type: DataTypes.STRING,
+        allowNull: false
     },
     phone: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false
     },
     companyId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     },
-  },
-  {
-    sequelize,
-    tableName: 'clients',
-  }
-);
-
-export default Client;
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    }
+}, { tableName: 'clients' });
