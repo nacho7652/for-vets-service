@@ -1,33 +1,22 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
-interface CompanyAttributes {
-  id: number;
-  name: string;
-  address: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-interface CompanyCreationAttributes extends Optional<CompanyAttributes, 'id'> {}
-
-class Company extends Model<CompanyAttributes, CompanyCreationAttributes> implements CompanyAttributes {
-  public id!: number;
-  public name!: string;
-  public address!: string;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Company.init(
+export const Company = sequelize.define('Company', 
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    full_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    rut: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    cellphone: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -35,11 +24,12 @@ Company.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
-    sequelize,
     tableName: 'companies',
   }
 );
-
-export default Company;

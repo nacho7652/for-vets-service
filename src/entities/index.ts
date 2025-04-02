@@ -1,5 +1,2 @@
-import {Client} from './client';
-
-export {
-    Client
-}
+export { Client as ClientEntity } from './client';
+export { Company as CompanyEntity } from './company';
