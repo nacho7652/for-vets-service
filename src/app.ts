@@ -1,9 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { connectDatabase } from './config/database';
 import { sequelize } from './config/database';
-import Company from './entities/company';
-import Client from './entities/client';
+import './entities/author';
 
 dotenv.config();
 
@@ -12,22 +10,14 @@ const port = process.env.PORT || 3000;
 
 const startServer = async () => {
     try {
-        await connectDatabase();
-        console.log('Database connected and models synchronized.');
+        await sequelize.authenticate();
+        console.log('Connection success');
 
-        // Synchronize models
-        sequelize
-            .authenticate()
-            .then(() => {
-                console.log('Connection success');
-                return sequelize.sync();
-            })
-            .catch((error) => {
-                console.error('Connection fail', error);
-            });
+        await sequelize.sync({ alter: true });
+        console.log('Sync models');
 
         app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
+            console.log(`Server listen on http://localhost:${port}`);
         });
     } catch (error) {
         console.error('Failed to start the server:', error);
