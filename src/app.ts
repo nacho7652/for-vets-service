@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { sequelize } from './config/database';
 import "./entities";
+import './entities/associations';
 
 dotenv.config();
 
