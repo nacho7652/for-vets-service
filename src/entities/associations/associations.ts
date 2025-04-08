@@ -1,7 +1,9 @@
-import { Role } from './role';
-import { Permission } from './permission';
-import { User } from './user';
-import { Pet } from './pet';
+import { Role } from '../role';
+import { Permission } from '../permission';
+import { User } from '../user';
+import { Pet } from '../pet';
+import { Client } from '../client';
+import { Company } from '../company';
 
 Role.belongsToMany(Permission, {
     through: 'role_permissions',
@@ -26,3 +28,6 @@ Pet.belongsToMany(User, {
     foreignKey: 'petId',
     otherKey: 'userId'
 });
+
+Client.belongsTo(Company, { foreignKey: 'companyId', as: 'company' }); // Relación de uno a muchos con Company
+//Client.belongsTo(Role, { foreignKey: 'rol_id', as: 'role' }); // Relación de uno a uno con Role

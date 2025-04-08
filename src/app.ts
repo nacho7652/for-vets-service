@@ -1,8 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { sequelize } from './config/database';
+import router from './routes/route';
 import "./entities";
-import './entities/associations';
+import './entities/associations/associations';
 
 dotenv.config();
 
@@ -17,6 +18,9 @@ const startServer = async () => {
         await sequelize.sync({ alter: true });
         console.log('Sync models');
 
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use('/auth', router)
         app.listen(port, () => {
             console.log(`Server listen on http://localhost:${port}`);
         });
