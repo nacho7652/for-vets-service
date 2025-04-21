@@ -1,13 +1,16 @@
 export { Client as ClientEntity } from './client';
 export { Company as CompanyEntity } from './company';
-export { Appointment as AppointmentEntity } from './appointment';
-export { Attendance as AttendanceEntity } from './attendance';
-export { Diagnosis as DiagnosisEntity } from './diagnosis';
+//export { Appointment as AppointmentEntity } from './appointment';
+//export { Attendance as AttendanceEntity } from './attendance';
+//export { Diagnosis as DiagnosisEntity } from './diagnosis';
 export { Permission as PermissionEntity } from './permission';
 export { Pet as PetEntity } from './pet';
-export { Profile as ProfileEntity } from './profile';
+//export { Profile as ProfileEntity } from './profile';
 export { Role as RoleEntity } from './role';
-export { Speciality as SpecialityEntity } from './speciality';
-export { Specie as SpecieEntity } from './specie';
-export { Testimonial as TestimonialEntity } from './testimonial';
-export { User as UserEntity } from './user';
+//export { Speciality as SpecialityEntity } from './speciality';
+//export { Specie as SpecieEntity } from './specie';
+//export { Testimonial as TestimonialEntity } from './testimonial';
+//export { User as UserEntity } from './user';
+export { Veterinarian as VeterinarianEntity } from './veterinarian';
+export { Timeslot as TimeslotEntity } from './timeslot';
+

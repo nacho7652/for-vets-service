@@ -6,35 +6,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
-interface CompanyRequest {
-    full_name: string;
-    rut: string;
-    cellphone: string;
-    address: string;
-    email: string;
-}
-
-interface RegisterUserRequestBody {
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    rut: string;
-    cellphone: string;
-    address: string;
-    pets_owner: boolean;
-    role_id: number;
-    companies: CompanyRequest;
-}
-
-
-
-interface RegisterUserRequest extends Request {
-    body: RegisterUserRequestBody;
-}
-
-interface RegisterUserResponse extends Response {}
-
 export const registerClient = async (req: Request, res: Response): Promise<void> => {
     try {
 

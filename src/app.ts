@@ -15,6 +15,9 @@ const startServer = async () => {
         await sequelize.authenticate();
         console.log('Connection success');
 
+        /*await sequelize.drop();
+        console.log('All tables dropped!');*/
+
         await sequelize.sync({ alter: true });
         console.log('Sync models');
 
