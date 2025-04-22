@@ -13,4 +13,4 @@ export { Role as RoleEntity } from './role';
 //export { User as UserEntity } from './user';
 export { Veterinarian as VeterinarianEntity } from './veterinarian';
 export { Timeslot as TimeslotEntity } from './timeslot';
-
+export { Shift as ShiftEntity } from './shift';

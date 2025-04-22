@@ -3,7 +3,6 @@
 import { sequelize } from "../config/database";
 import { Appointment } from "../entities/appointment";
 import { Client } from "../entities/client";
-import { Timeslot } from "../entities/timeslot";
 import { Veterinarian } from "../entities/veterinarian";
 import { Request, Response } from "express";
 
@@ -51,6 +50,7 @@ export const createAppointment = async (req: Request, res: Response) => {
 export const getAppointmentById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
+    console.log('----------------getAppointmentById----------------');
     try {
         const appointment = await Appointment.findByPk(id, {
             include: [
@@ -127,32 +127,52 @@ export const deleteAppointment = async (req: Request, res: Response) => {
 
 // Obtener horas disponibles de un veterinario
 export const getAvailableTimes = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { date } = req.query;
+    const { id: veterinarianId } = req.params; // Obtener el ID del veterinario desde los parámetros de la ruta
+    const { date } = req.query; // Obtener la fecha desde los parámetros de consulta
 
+
+    console.log('----------------getAvailableTimes----------------');
+    console.log('Veterinarian ID:', veterinarianId);
+    console.log('Date:', date);
     try {
-        console.log('ID:', id);
-        console.log('Date:', date);
-        const timeslots = await Timeslot.findAll({
-            where: { veterinarianId: id, availableDate: date },
-            attributes: ['availableTime'],
-            include: [{
-                model: Appointment,
-                required: false,
-                where: { appointmentDate: date },
-            }],
+        // Validar parámetros
+        if (!veterinarianId || !date || typeof date !== 'string') {
+            return res.status(400).json({ error: 'Los parámetros "veterinarianId" y "date" son requeridos' });
+        }
+
+        // Definir el rango de horas de trabajo (8:00 AM a 8:00 PM)
+        const startHour = 8; // 8:00 AM
+        const endHour = 20; // 8:00 PM
+        const appointmentDuration = 45; // Duración de cada consulta en minutos
+
+        // Generar todos los bloques de tiempo disponibles
+        const timeSlots: string[] = [];
+        for (let hour = startHour; hour < endHour; hour++) {
+            for (let minute = 0; minute < 60; minute += appointmentDuration) {
+                const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
+                timeSlots.push(time);
+            }
+        }
+
+        // Consultar las citas existentes del veterinario para la fecha dada
+        const existingAppointments = await Appointment.findAll({
+            where: {
+                veterinarianId,
+                appointmentDate: date,
+            },
+            attributes: ['appointmentTime'], // Solo necesitamos las horas de las citas
         });
 
-        /*
-        const availableTimes = timeslots
-            .filter(slot => !slot.Appointment)
-            .map(slot => slot.availableTime);
-        */
-        //res.json({ availableTimes });
-        res.json({ timeslots });
+        // Extraer las horas ocupadas
+        const occupiedTimes = existingAppointments.map(app => app.get('appointmentTime') as string);
+
+        // Filtrar los bloques disponibles
+        const availableTimes = timeSlots.filter(time => !occupiedTimes.includes(time));
+
+        res.json({ availableTimes });
     } catch (error) {
-        res.status(500).json({ error: error instanceof Error ? error.message : 'Error al recuperar horas disponibles' });
-    }
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Error al obtener horas disponibles' });
+    }  
 };
 
 // Obtener citas de un cliente por mes
@@ -160,6 +180,7 @@ export const getClientAppointments = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { month } = req.query;
 
+    console.log('----------------getClientAppointments----------------');
     try {
         console.log('ID:', id);
         console.log('Month:', month);
@@ -192,6 +213,7 @@ export const getClientAppointments = async (req: Request, res: Response) => {
 
 // Obtener todas las citas de los veterinarios
 export const getVeterinarianAppointments = async (req: Request, res: Response) => {
+    console.log('----------------getVeterinarianAppointments----------------');
     try {
         const appointments = await Appointment.findAll({
             include: [
